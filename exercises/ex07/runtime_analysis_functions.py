@@ -1,32 +1,46 @@
+"""Test Run Time."""
+
+__author__ = "730477576"
+
 import numpy as np
 import timeit
 import tracemalloc
+from random import randint
 
 MAX_VAL: int = 10 ** 5
+
 
 def random_descending_list(n: int) -> list[int]:
     """Generate a list of random descending integers."""
     new_list: list[int] = []
+    new_list.append(MAX_VAL)
+    ctr: int = 1
+    max_val_new: int = MAX_VAL
+    while ctr < n:
+        new_list.append(randint(-1000000, max_val_new))
+        max_val_new = new_list[ctr]
+        ctr += 1
     return new_list
+
 
 def evaluate_runtime(fn_name, start_size: int, end_size: int) -> np.array:
     """Evaluate the runtime for different size inputs."""
-    from exercises.ex07.sort_functions import selection_sort, insertion_sort
     NUM_TRIALS: int = 1
     times: list[float] = []
-    for inp_size in range(start_size, end_size+1):
+    for inp_size in range(start_size, end_size + 1):
         l: list[int] = random_descending_list(inp_size)
         call_command: str = f"{fn_name}(l)"
-        print(f"Trial {inp_size-start_size}/{end_size - start_size}")
+        print(f"Trial {inp_size - start_size} / {end_size - start_size}")
         result = timeit.timeit(stmt=call_command, globals=locals(), number=NUM_TRIALS)
-        times.append(result/NUM_TRIALS)
+        times.append(result / NUM_TRIALS)
     print(f"Runtime of {fn_name} for input of size {end_size}: {round(result/NUM_TRIALS, 2)} seconds")
     return np.array(times)
 
+
 def evaluate_memory_usage(fn_name, start_size: int, end_size: int):
-    from exercises.ex07.sort_functions import selection_sort, insertion_sort
+    """Evaluates run time."""
     usage: list[float] = []
-    for inp_size in range(start_size, end_size+1):
+    for inp_size in range(start_size, end_size + 1):
         l: list[int] = random_descending_list(inp_size)
         print(f"Trial {inp_size-start_size}/{end_size - start_size}")
         tracemalloc.start()
